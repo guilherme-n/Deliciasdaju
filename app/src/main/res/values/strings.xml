@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Delicias da Ju</string>
+    <string name="titulo_pedido">Peca ja sua delicia</string>
+    <string name="navegacao_pedido">Pedido</string>
+    <string name="titulo_historico">Historico</string>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>
