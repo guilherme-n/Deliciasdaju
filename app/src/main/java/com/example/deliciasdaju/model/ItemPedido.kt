@@ -1,16 +1,6 @@
 package com.example.deliciasdaju.model
 
-class ItemPedido(produto: Produto) {
+data class ItemPedido(val produto: Produto, var quantidade: Int) {
     var id: Long = 0
-    var produto: Produto
-    var quantidade: Int = 0
     val valor: Float = produto.valor * quantidade
-
-    init {
-        this.produto = produto
-    }
-
-    override fun toString(): String{
-        return produto.descricao
-    }
 }

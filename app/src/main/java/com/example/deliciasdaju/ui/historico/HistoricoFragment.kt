@@ -1,42 +1,51 @@
 package com.example.deliciasdaju.ui.historico
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
+import android.widget.ListView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.FragmentActivity
 import com.example.deliciasdaju.R
+import com.example.deliciasdaju.dao.AppDatabase
+import com.example.deliciasdaju.ui.adapter.ListPedidoAdapter
+
 
 class HistoricoFragment : Fragment() {
-
-    private lateinit var historicoViewModel: HistoricoViewModel
-    private var numero = 1
+    private lateinit var viewHistorico: View
+    private lateinit var listViewHistorico: ListView
+    private var database: AppDatabase? = null
+    private lateinit var adapterView: ListPedidoAdapter
+    private lateinit var contexto: Context
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        historicoViewModel = ViewModelProviders.of(this).get(HistoricoViewModel::class.java)
+        viewHistorico = inflater.inflate(R.layout.fragment_historico, container, false)
+        listViewHistorico = viewHistorico.findViewById(R.id.listViewHistorico)
+        contexto = activity ?: FragmentActivity()
 
-        val root = inflater.inflate(R.layout.fragment_historico, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
+        database = AppDatabase.getInstance(contexto)
 
-        val observador = Observer<String> {
-            textView.text = it
-        }
+        adapterView = ListPedidoAdapter(contexto)
+        listViewHistorico.adapter = adapterView
 
-        historicoViewModel.text.observe(this, observador)
+        var pedidos = database?.pedidoDao()?.getlAll()
+        adapterView.atualizar(pedidos ?: mutableListOf())
 
-        val btnFinalizarPedido = root.findViewById(R.id.btnTrocarTexto) as Button
+        val btnFinalizarPedido = viewHistorico.findViewById(R.id.btnTrocarTexto) as Button
         btnFinalizarPedido.setOnClickListener {
-            historicoViewModel.text.value = numero++.toString()
         }
 
-        return root
+        return viewHistorico
+    }
+
+    fun carregarListaHistoricoPedidos() {
+
     }
 }

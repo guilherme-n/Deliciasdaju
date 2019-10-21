@@ -1,9 +1,13 @@
 package com.example.deliciasdaju.model
 
-import java.util.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-object Pedido{
-    var data: Calendar? = null
-    var itensPedido = mutableListOf<ItemPedido>()
-    var texto: String = "teste5"
+@Entity
+data class Pedido(
+    @PrimaryKey(autoGenerate = true) var id: Long?,
+    val firstName: String?,
+    val lastName: String?
+){
+    constructor():this(null,"","")
 }

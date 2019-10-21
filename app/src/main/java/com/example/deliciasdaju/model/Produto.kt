@@ -1,12 +1,13 @@
 package com.example.deliciasdaju.model
 
-class Produto(descricao: String, valor: Float){
-    var id: Int? = null
-    var descricao: String = ""
-    var valor: Float = 0f
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-    init{
-        this.descricao = descricao
-        this.valor = valor
-    }
+@Entity
+data class Produto(
+    @PrimaryKey(autoGenerate = true) var id: Long?,
+    val descricao: String,
+    val valor: Float
+){
+    constructor():this(null,"",0f)
 }
