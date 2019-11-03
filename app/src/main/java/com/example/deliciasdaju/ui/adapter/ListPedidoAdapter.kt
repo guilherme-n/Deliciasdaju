@@ -19,7 +19,7 @@ class ListPedidoAdapter(private val context: Context) : BaseAdapter(){
         val viewPedidoItem = inflater.inflate(R.layout.pedido_item, parent, false)
 
         val txtDescricaoPedido = viewPedidoItem.findViewById<TextView>(R.id.txtDescricaoPedido)
-        txtDescricaoPedido.text = pedidos.get(position).id.toString() + " - "+ pedidos.get(position).firstName
+        txtDescricaoPedido.text = pedidos.get(position).id.toString()
 
         return viewPedidoItem
     }

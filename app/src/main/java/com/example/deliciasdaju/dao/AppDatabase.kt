@@ -8,7 +8,7 @@ import com.example.deliciasdaju.model.Pedido
 import com.example.deliciasdaju.model.Produto
 
 
-@Database(entities = arrayOf(Pedido::class, Produto::class), version = 2, exportSchema = false)
+@Database(entities = arrayOf(Pedido::class, Produto::class), version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun pedidoDao(): PedidoDao
@@ -21,10 +21,11 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(context: Context): AppDatabase? {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, NOME_BANCO_DADOS)
-                        .allowMainThreadQueries()
-                        .fallbackToDestructiveMigration()
-                        .build()
+                    INSTANCE =
+                        Room.databaseBuilder(context, AppDatabase::class.java, NOME_BANCO_DADOS)
+                            .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
+                            .build()
                 }
             }
             return INSTANCE

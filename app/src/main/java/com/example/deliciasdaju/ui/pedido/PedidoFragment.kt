@@ -14,11 +14,20 @@ import com.example.deliciasdaju.dao.AppDatabase
 import com.example.deliciasdaju.model.Pedido
 import com.example.deliciasdaju.model.Produto
 import com.example.deliciasdaju.ui.adapter.ListProdutoAdapter
+import java.time.LocalDateTime
+import java.util.*
 
 
 class PedidoFragment : Fragment() {
     private lateinit var viewPedido: View
     private var database: AppDatabase? = null
+
+    private val pedidoViewModel: PedidoViewModel by lazy{
+        val database = AppDatabase.getInstance(activity?: FragmentActivity())
+        val factory = PedidoViewModelFactory(database?.produtoDao()!!)
+        val pedidoViewModel = ViewModelProviders.of(this, factory)
+        pedidoViewModel.get(PedidoViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,24 +41,17 @@ class PedidoFragment : Fragment() {
 
         val listView : ListView = viewPedido.findViewById(R.id.listViewPedido)
         val txtTotalPedido = viewPedido.findViewById(R.id.txtTotalPedido) as TextView
-        val pedidoViewModel = ViewModelProviders.of(this).get(PedidoViewModel::class.java)
-        pedidoViewModel.totalPedido.value = "R$ 0,00"
 
         val arrayAdapter = ListProdutoAdapter(activity?: FragmentActivity(), this)
         listView.adapter = arrayAdapter
 
 //        popularBancoComProdutos(listView)
 
-        val produtos = database?.produtoDao()?.getlAll()?.toMutableList()
-        produtos?.sortBy { x -> x.descricao }
-        arrayAdapter.atualizar(produtos ?: mutableListOf())
+        arrayAdapter.atualizar(pedidoViewModel.listaItemPedido.value!!)
 
-
-        val observador = Observer<String> {
-            txtTotalPedido.text = it
-        }
-
-        pedidoViewModel.totalPedido.observe(this, observador)
+        pedidoViewModel.totalPedido.observe(this, Observer<Float> {
+                txtTotalPedido.text = ("R$ %.2f".format(it))
+        })
 
         cadastrarEventos()
 
@@ -60,8 +62,9 @@ class PedidoFragment : Fragment() {
 
         val btnFinalizarPedido = viewPedido.findViewById(R.id.btnFinalizarPedido) as Button
         btnFinalizarPedido.setOnClickListener {
-            val pedido = Pedido( null,"Nome2", "Sobrenome2")
-            cadastrarPedido(pedido)
+            val (listaEncontrada) = pedidoViewModel.listaItemPedido.value!!.partition { it.quantidade > 0}
+//            val pedido = Pedido( null, Calendar.getInstance().time, listaEncontrada)
+//            cadastrarPedido(pedido)
 
             Toast.makeText(activity, "Pedido finalizado", Toast.LENGTH_LONG).show()
         }
